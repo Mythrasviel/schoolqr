@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+        }
+
+        .header h1 {
+            color: #0f172a;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+        }
+
+        .btn-outline:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-destructive {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-destructive:hover {
+            background: #dc2626;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-list {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-trigger {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #64748b;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab-trigger.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .student-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .student-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            background: white;
+        }
+
+        .student-info h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .student-info p {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .qr-code {
+            text-align: center;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .attendance-table th,
+        .attendance-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .attendance-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Login Page -->
+        <div id="loginPage" class="login-container">
+            <div class="login-card">
+                <h1 class="login-title">Student Attendance System</h1>
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="loginEmail" class="form-input" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <select id="loginRole" class="form-input">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn" onclick="handleLogin()" style="width: 100%;">Login</button>
+                    <div id="loginError" class="error-message hidden"></div>
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <button type="button" class="btn btn-outline" onclick="showRegister()">New Student? Register Here</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Page -->
+        <div id="registerPage" class="login-container hidden">
+            <div class="login-card">
+                <h1 class="login-title">Student Registration</h1>
+                <div id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="regName" class="form-input" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="regEmail" class="form-input" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Class</label>
+                        <input type="text" id="regClass" class="form-input" placeholder="e.g., 10A">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">School ID</label>
+                        <input type="text" id="regSchoolId" class="form-input" placeholder="Enter your school ID">
+                    </div>
+                    <button type="button" class="btn" onclick="handleRegister()" style="width: 100%;">Register</button>
+                    <div id="registerError" class="error-message hidden"></div>
+                    <div id="registerSuccess" class="success-message hidden"></div>
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <button type="button" class="btn btn-outline" onclick="showLogin()">Already have an account? Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="hidden">
+            <header class="header">
+                <div class="container">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1>Admin Dashboard</h1>
+                            <p>Welcome, <span id="adminName"></span></p>
+                        </div>
+                        <button class="btn btn-outline" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="container" style="padding-top: 2rem;">
+                <div class="tabs">
+                    <div class="tabs-list">
+                        <button class="tab-trigger active" onclick="showTab('overview')">Overview</button>
+                        <button class="tab-trigger" onclick="showTab('students')">Students</button>
+                        <button class="tab-trigger" onclick="showTab('teachers')">Teachers</button>
+                        <button class="tab-trigger" onclick="showTab('reports')">Reports</button>
+                    </div>
+
+                    <div id="overviewTab" class="tab-content active">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalStudents">0</div>
+                                <div class="stat-label">Total Students</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalTeachers">0</div>
+                                <div class="stat-label">Total Teachers</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalAttendance">0</div>
+                                <div class="stat-label">Attendance Records</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="studentsTab" class="tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Registered Students</h2>
+                                <p class="card-description">Students who have self-registered in the system</p>
+                            </div>
+                            <div class="card-content">
+                                <div id="studentsList" class="student-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="teachersTab" class="tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Teacher Management</h2>
+                                <p class="card-description">Manage teacher accounts and permissions</p>
+                            </div>
+                            <div class="card-content">
+                                <div id="teachersList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="reportsTab" class="tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Attendance Reports</h2>
+                                <p class="card-description">View attendance statistics and reports</p>
+                            </div>
+                            <div class="card-content">
+                                <div id="attendanceReports"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Teacher Dashboard -->
+        <div id="teacherDashboard" class="hidden">
+            <header class="header">
+                <div class="container">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1>Teacher Dashboard</h1>
+                            <p>Welcome back, <span id="teacherName"></span></p>
+                        </div>
+                        <button class="btn btn-outline" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="container" style="padding-top: 2rem;">
+                <div class="tabs">
+                    <div class="tabs-list">
+                        <button class="tab-trigger active" onclick="showTab('overview')">Overview</button>
+                        <button class="tab-trigger" onclick="showTab('scan')">QR Scanner</button>
+                        <button class="tab-trigger" onclick="showTab('attendance')">Today's Attendance</button>
+                    </div>
+
+                    <div id="overviewTab" class="tab-content active">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number" id="teacherTotalStudents">0</div>
+                                <div class="stat-label">Total Students</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="teacherPresentToday">0</div>
+                                <div class="stat-label">Present Today</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="teacherAttendanceRate">0%</div>
+                                <div class="stat-label">Attendance Rate</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="scanTab" class="tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">QR Code Scanner</h2>
+                                <p class="card-description">Scan student QR codes to mark attendance</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="form-group">
+                                    <label class="form-label">QR Code Data</label>
+                                    <input type="text" id="qrInput" class="form-input" placeholder="Enter QR code data or scan">
+                                </div>
+                                <button class="btn" onclick="markAttendance()">Mark Attendance</button>
+                                
+                                <div style="margin-top: 2rem;">
+                                    <h3>Quick Test - Student QR Codes</h3>
+                                    <div id="quickTestButtons" style="display: grid; gap: 0.5rem; margin-top: 1rem;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="attendanceTab" class="tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Today's Attendance</h2>
+                                <p class="card-description">Students marked present today</p>
+                            </div>
+                            <div class="card-content">
+                                <div id="todayAttendanceList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div id="studentDashboard" class="hidden">
+            <header class="header">
+                <div class="container">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1>Student Dashboard</h1>
+                            <p>Welcome, <span id="studentName"></span></p>
+                        </div>
+                        <button class="btn btn-outline" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="container" style="padding-top: 2rem;">
+                <div class="tabs">
+                    <div class="tabs-list">
+                        <button class="tab-trigger active" onclick="showTab('qr-code')">My QR Code</button>
+                        <button class="tab-trigger" onclick="showTab('overview')">Overview</button>
+                        <button class="tab-trigger" onclick="showTab('history')">Attendance History</button>
+                    </div>
+
+                    <div id="qr-codeTab" class="tab-content active">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Your Attendance QR Code</h2>
+                                <p class="card-description">Show this QR code to your teacher for attendance marking</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="qr-code">
+                                    <div id="qrCodeDisplay"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="overviewTab" class="tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Attendance Overview</h2>
+                                <p class="card-description">Your attendance statistics</p>
+                            </div>
+                            <div class="card-content">
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-number" id="studentTotalDays">0</div>
+                                        <div class="stat-label">Total Days</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-number" id="studentPresentDays">0</div>
+                                        <div class="stat-label">Present Days</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-number" id="studentAttendanceRate">0%</div>
+                                        <div class="stat-label">Attendance Rate</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="historyTab" class="tab-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Attendance History</h2>
+                                <p class="card-description">Your attendance records</p>
+                            </div>
+                            <div class="card-content">
+                                <div id="studentAttendanceHistory"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let currentUser = null;
+        let students = [
+            {
+                id: '1',
+                name: 'John Doe',
+                email: 'john.doe@student.edu',
+                class: '10A',
+                schoolId: 'STU2024001',
+                qrCode: 'STU2024001-JOHN-DOE'
+            },
+            {
+                id: '2',
+                name: 'Jane Smith',
+                email: 'jane.smith@student.edu',
+                class: '10A',
+                schoolId: 'STU2024002',
+                qrCode: 'STU2024002-JANE-SMITH'
+            },
+            {
+                id: '3',
+                name: 'Mike Johnson',
+                email: 'mike.johnson@student.edu',
+                class: '10B',
+                schoolId: 'STU2024003',
+                qrCode: 'STU2024003-MIKE-JOHNSON'
+            }
+        ];
+
+        let teachers = [
+            {
+                id: 'teacher1',
+                name: 'John Teacher',
+                email: 'teacher@school.edu',
+                subject: 'Mathematics',
+                createdBy: 'admin@school.edu',
+                password: 'teacher123',
+                isDefaultPassword: true
+            }
+        ];
+
+        let attendanceRecords = [
+            {
+                id: '1',
+                studentId: '1',
+                studentName: 'John Doe',
+                date: '2024-08-24',
+                time: '09:00',
+                status: 'present',
+                markedBy: 'teacher@school.edu'
+            },
+            {
+                id: '2',
+                studentId: '2',
+                studentName: 'Jane Smith',
+                date: '2024-08-24',
+                time: '09:02',
+                status: 'present',
+                markedBy: 'teacher@school.edu'
+            }
+        ];
+
+        // Utility functions
+        function showPage(pageId) {
+            document.querySelectorAll('[id$="Page"], [id$="Dashboard"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-trigger').forEach(el => el.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.classList.remove('hidden');
+        }
+
+        function hideError(elementId) {
+            document.getElementById(elementId).classList.add('hidden');
+        }
+
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.classList.remove('hidden');
+        }
+
+        // Authentication functions
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const role = document.getElementById('loginRole').value;
+
+            hideError('loginError');
+
+            if (role === 'admin') {
+                if (email === 'admin@school.edu' && password === 'admin123') {
+                    currentUser = {
+                        id: 'admin1',
+                        name: 'School Administrator',
+                        email: 'admin@school.edu',
+                        role: 'admin'
+                    };
+                    showAdminDashboard();
+                } else {
+                    showError('loginError', 'Invalid admin credentials');
+                }
+            } else if (role === 'teacher') {
+                const teacher = teachers.find(t => t.email === email);
+                if (teacher && teacher.password === password) {
+                    currentUser = {
+                        id: teacher.id,
+                        name: teacher.name,
+                        email: teacher.email,
+                        role: 'teacher'
+                    };
+                    showTeacherDashboard();
+                } else {
+                    showError('loginError', 'Invalid teacher email or password');
+                }
+            } else if (role === 'student') {
+                const student = students.find(s => s.email === email);
+                if (student && password === 'student123') {
+                    currentUser = {
+                        id: student.id,
+                        name: student.name,
+                        email: student.email,
+                        role: 'student',
+                        qrCode: student.qrCode
+                    };
+                    showStudentDashboard();
+                } else {
+                    showError('loginError', 'Invalid student credentials or account not found');
+                }
+            }
+        }
+
+        function handleRegister() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const className = document.getElementById('regClass').value;
+            const schoolId = document.getElementById('regSchoolId').value;
+
+            hideError('registerError');
+            hideError('registerSuccess');
+
+            if (!name || !email || !className || !schoolId) {
+                showError('registerError', 'Please fill in all fields');
+                return;
+            }
+
+            if (students.some(s => s.schoolId === schoolId)) {
+                showError('registerError', 'School ID already taken');
+                return;
+            }
+
+            const newStudent = {
+                id: Date.now().toString(),
+                name,
+                email,
+                class: className,
+                schoolId,
+                qrCode: `${schoolId}-${name.replace(/\s+/g, '-').toUpperCase()}`
+            };
+
+            students.push(newStudent);
+            showSuccess('registerSuccess', 'Registration successful! You can now login.');
+            
+            // Clear form
+            document.getElementById('registerForm').reset();
+        }
+
+        function logout() {
+            currentUser = null;
+            showPage('loginPage');
+        }
+
+        function showRegister() {
+            showPage('registerPage');
+        }
+
+        function showLogin() {
+            showPage('loginPage');
+        }
+
+        // Dashboard functions
+        function showAdminDashboard() {
+            showPage('adminDashboard');
+            document.getElementById('adminName').textContent = currentUser.name;
+            updateAdminStats();
+            renderStudentsList();
+        }
+
+        function showTeacherDashboard() {
+            showPage('teacherDashboard');
+            document.getElementById('teacherName').textContent = currentUser.name;
+            updateTeacherStats();
+            renderQuickTestButtons();
+            renderTodayAttendance();
+        }
+
+        function showStudentDashboard() {
+            showPage('studentDashboard');
+            document.getElementById('studentName').textContent = currentUser.name;
+            updateStudentStats();
+            renderQRCode();
+            renderStudentAttendanceHistory();
+        }
+
+        function updateAdminStats() {
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('totalTeachers').textContent = teachers.length;
+            document.getElementById('totalAttendance').textContent = attendanceRecords.length;
+        }
+
+        function updateTeacherStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayAttendance = attendanceRecords.filter(r => r.date === today);
+            
+            document.getElementById('teacherTotalStudents').textContent = students.length;
+            document.getElementById('teacherPresentToday').textContent = todayAttendance.length;
+            document.getElementById('teacherAttendanceRate').textContent = 
+                students.length > 0 ? Math.round((todayAttendance.length / students.length) * 100) + '%' : '0%';
+        }
+
+        function updateStudentStats() {
+            const studentRecords = attendanceRecords.filter(r => r.studentId === currentUser.id);
+            const totalDays = studentRecords.length;
+            const presentDays = studentRecords.filter(r => r.status === 'present').length;
+            
+            document.getElementById('studentTotalDays').textContent = totalDays;
+            document.getElementById('studentPresentDays').textContent = presentDays;
+            document.getElementById('studentAttendanceRate').textContent = 
+                totalDays > 0 ? Math.round((presentDays / totalDays) * 100) + '%' : '0%';
+        }
+
+        function renderStudentsList() {
+            const container = document.getElementById('studentsList');
+            if (students.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 2rem;">No students registered yet</p>';
+                return;
+            }
+
+            container.innerHTML = students.map(student => `
+                <div class="student-item">
+                    <div class="student-info">
+                        <h3>${student.name}</h3>
+                        <p>${student.schoolId} - ${student.class} - ${student.email}</p>
+                    </div>
+                    <button class="btn btn-destructive btn-sm" onclick="deleteStudent('${student.id}')">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function renderQuickTestButtons() {
+            const container = document.getElementById('quickTestButtons');
+            container.innerHTML = students.slice(0, 4).map(student => `
+                <button class="btn btn-outline" onclick="fillQRCode('${student.qrCode}')">
+                    <div style="text-align: left;">
+                        <div>${student.name}</div>
+                        <div style="font-size: 0.75rem; color: #64748b;">${student.schoolId} - ${student.class}</div>
+                    </div>
+                </button>
+            `).join('');
+        }
+
+        function renderTodayAttendance() {
+            const container = document.getElementById('todayAttendanceList');
+            const today = new Date().toISOString().split('T')[0];
+            const todayAttendance = attendanceRecords.filter(r => r.date === today);
+            
+            if (todayAttendance.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 2rem;">No attendance marked today</p>';
+                return;
+            }
+
+            container.innerHTML = todayAttendance.map(record => `
+                <div class="student-item">
+                    <div class="student-info">
+                        <h3>${record.studentName}</h3>
+                        <p>${record.time}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderQRCode() {
+            const container = document.getElementById('qrCodeDisplay');
+            if (currentUser.qrCode) {
+                container.innerHTML = `
+                    <h3>${currentUser.qrCode}</h3>
+                    <p style="color: #64748b; margin-top: 0.5rem;">Show this code to your teacher</p>
+                `;
+            }
+        }
+
+        function renderStudentAttendanceHistory() {
+            const container = document.getElementById('studentAttendanceHistory');
+            const studentRecords = attendanceRecords.filter(r => r.studentId === currentUser.id);
+            
+            if (studentRecords.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #64748b; padding: 2rem;">No attendance records found</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Marked By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${studentRecords.map(record => `
+                            <tr>
+                                <td>${record.date}</td>
+                                <td>${record.time}</td>
+                                <td>${record.status}</td>
+                                <td>${record.markedBy}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function fillQRCode(qrCode) {
+            document.getElementById('qrInput').value = qrCode;
+        }
+
+        function markAttendance() {
+            const qrCode = document.getElementById('qrInput').value;
+            if (!qrCode) {
+                alert('Please enter a QR code');
+                return;
+            }
+
+            const student = students.find(s => s.qrCode === qrCode);
+            if (!student) {
+                alert('Student not found');
+                return;
+            }
+
+            const now = new Date();
+            const newRecord = {
+                id: Date.now().toString(),
+                studentId: student.id,
+                studentName: student.name,
+                date: now.toISOString().split('T')[0],
+                time: now.toTimeString().split(' ')[0].substring(0, 5),
+                status: 'present',
+                markedBy: currentUser.email
+            };
+
+            attendanceRecords.push(newRecord);
+            document.getElementById('qrInput').value = '';
+            
+            alert(`Attendance marked for ${student.name}`);
+            updateTeacherStats();
+            renderTodayAttendance();
+        }
+
+        function deleteStudent(studentId) {
+            if (confirm('Are you sure you want to remove this student?')) {
+                students = students.filter(s => s.id !== studentId);
+                attendanceRecords = attendanceRecords.filter(r => r.studentId !== studentId);
+                updateAdminStats();
+                renderStudentsList();
+            }
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage('loginPage');
+        });
+    </script>
+</body>
+</html>
+

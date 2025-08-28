@@ -49,34 +49,34 @@ export default function App() {
   const [students, setStudents] = useState<Student[]>([
     {
       id: '1',
-      name: 'John Doe',
-      email: 'john.doe@student.edu',
+      name: 'Mayo Nugas',
+      email: 'mayonugas@student.edu',
       class: '10A',
       schoolId: 'STU2024001',
-      qrCode: 'STU2024001-JOHN-DOE'
+      qrCode: 'STU2024001-MAYO-NUGAS'
     },
     {
       id: '2',
-      name: 'Jane Smith',
-      email: 'jane.smith@student.edu',
+      name: 'Erma Estillore',
+      email: 'ermaestillore@student.edu',
       class: '10A',
       schoolId: 'STU2024002',
-      qrCode: 'STU2024002-JANE-SMITH'
+      qrCode: 'STU2024002-ERMA-ESTILLORE'
     },
     {
       id: '3',
-      name: 'Mike Johnson',
-      email: 'mike.johnson@student.edu',
+      name: 'Ariel Sialongo',
+      email: 'arielsialongo@student.edu',
       class: '10B',
       schoolId: 'STU2024003',
-      qrCode: 'STU2024003-MIKE-JOHNSON'
+      qrCode: 'STU2024003-ARIEL-SIALONGO'
     }
   ]);
 
   const [teachers, setTeachers] = useState<Teacher[]>([
     {
       id: 'teacher1',
-      name: 'John Teacher',
+      name: 'Cyrine Ganloy',
       email: 'teacher@school.edu',
       subject: 'Mathematics',
       createdBy: 'admin@school.edu',
@@ -89,7 +89,7 @@ export default function App() {
     {
       id: '1',
       studentId: '1',
-      studentName: 'John Doe',
+      studentName: 'Mayo Nugas',
       date: '2024-08-24',
       time: '09:00',
       status: 'present',
@@ -98,7 +98,7 @@ export default function App() {
     {
       id: '2',
       studentId: '2',
-      studentName: 'Jane Smith',
+      studentName: 'Erma Estillore',
       date: '2024-08-24',
       time: '09:02',
       status: 'present',
@@ -182,7 +182,7 @@ export default function App() {
     if (currentUser?.role === 'teacher') {
       return teachers.find(t => t.email === currentUser.email);
     }
-    return null;
+    return undefined;
   };
 
   if (!currentUser) {
